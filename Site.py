@@ -1,70 +1,93 @@
 import streamlit as st
+from streamlit_option_menu import option_menu
 
-# Page config
-st.set_page_config(page_title="AI Debate Generator", layout="wide")
+st.set_page_config(layout="wide")
 
-# Custom CSS
-st.markdown("""
-    <style>
-    .stApp {
-        background: linear-gradient(to bottom, #2c3e50, #1a252f);
-        color: #f5f5f5;
+custom_css = """
+<style>
+    body {
+        background: linear-gradient(to bottom, #22313F, #1B262C);
+        font-family: 'Segoe UI', sans-serif;
     }
     .main-container {
         display: flex;
-        justify-content: space-between;
-        gap: 2rem;
-        margin-top: 2rem;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 40px;
+        margin-top: 30px;
+        flex-wrap: wrap;
     }
     .glass-box {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.08);
+        padding: 30px;
         border-radius: 12px;
-        padding: 2rem;
+        box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        color: #f0f0f0;
         flex: 1;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        color: #ffffff;
-        transition: all 0.5s ease;
+        min-width: 350px;
+        transition: all 0.4s ease-in-out;
     }
-    .glass-box h3 {
-        color: #ffffff;
-        font-weight: 600;
+    .debate-box {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        color: #f0f0f0;
+        flex: 1;
+        min-width: 350px;
     }
-    </style>
+    .stSlider > div > div {
+        color: #fff !important;
+    }
+    .stButton > button {
+        background-color: #ec008c;
+        color: white;
+        font-weight: bold;
+        padding: 10px 20px;
+        border-radius: 10px;
+        transition: 0.3s ease;
+    }
+    .stButton > button:hover {
+        background-color: #ff5ec4;
+        box-shadow: 0 0 15px #ff5ec4;
+    }
+</style>
+"""
+
+st.markdown(custom_css, unsafe_allow_html=True)
+
+st.markdown("""
+    <h1 style='text-align: center;'>🤖 AI Debate Generator</h1>
+    <p style='text-align: center;'>Enter your topic and customize the participants</p>
 """, unsafe_allow_html=True)
 
-# Title
-st.markdown("<h1 style='text-align: center;'>🤖 AI Debate Generator</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center;'>Enter your topic and customize the participants</p>", unsafe_allow_html=True)
+if "generate_clicked" not in st.session_state:
+    st.session_state.generate_clicked = False
 
-# State for generating
-if "show_output" not in st.session_state:
-    st.session_state.show_output = False
+col1, col2 = st.columns(2)
 
-# Layout containers
-left_col, right_col = st.columns(2)
-
-with left_col:
-    with st.form(key="debate_form"):
+with col1:
+    with st.container():
         st.markdown("<div class='glass-box'>", unsafe_allow_html=True)
-
-        st.text_input("🎯 Debate Topic", placeholder="e.g., Is AI replacing creativity?")
-        num_participants = st.slider("👥 Number of Participants", 2, 6, 2)
-
+        topic = st.text_input("🎯 Debate Topic", placeholder="e.g., Is AI replacing creativity?")
+        num_participants = st.slider("👥 Number of Participants", min_value=2, max_value=6, value=2)
+        participant_names = []
         for i in range(num_participants):
-            st.text_input(f"Name of Participant {i+1}", key=f"name_{i}")
+            name = st.text_input(f"Name of Participant {i + 1}")
+            participant_names.append(name)
 
-        submitted = st.form_submit_button("🧠 Generate Debate")
+        if st.button("💬 Generate Debate"):
+            st.session_state.generate_clicked = True
         st.markdown("</div>", unsafe_allow_html=True)
 
-        if submitted:
-            st.session_state.show_output = True
-
-# Right box (appears on generate)
-if st.session_state.show_output:
-    with right_col:
-        st.markdown("<div class='glass-box'>", unsafe_allow_html=True)
-        st.markdown("### 💬 AI Debate Simulation")
-        st.write("**Bot 1:** This is a placeholder for generated argument.")
-        st.write("**Bot 2:** And this is another perspective.")
+if st.session_state.generate_clicked:
+    with col2:
+        st.markdown("<div class='debate-box'>", unsafe_allow_html=True)
+        st.subheader("💬 AI Debate Simulation")
+        for i, name in enumerate(participant_names):
+            st.markdown(f"**{name}:** This is a placeholder argument.")
         st.markdown("</div>", unsafe_allow_html=True)
