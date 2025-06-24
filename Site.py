@@ -1,41 +1,7 @@
 import streamlit as st
 import base64
 import os
-import openai
-
-# Set your OpenAI API Key here or via environment variable
-openai.api_key = os.getenv("API KEY")  # safer method
-# openai.api_key = "your-openai-key-here"  # Uncomment for quick testing (not recommended in prod)
-
-# --- Function to generate argument using OpenAI ---
-def generate_argument(topic, participant_name, stance):
-    prompt = f"""You are participating in a formal debate.
-Topic: {topic}
-Your name: {participant_name}
-Your stance: {stance}
-
-Write a strong and persuasive argument from {participant_name}'s perspective in favor of their stance.
-Be respectful, logical, and avoid repetition. Limit to 100 words.
-"""
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=200,
-            temperature=0.7,
-        )
-        return response['choices'][0]['message']['content'].strip()
-    except Exception as e:
-        return f"Error generating argument for {participant_name}: {str(e)}"
-
-
-def generate_debate(topic, participants):
-    debate_results = []
-    for i, name in enumerate(participants):
-        stance = "in favor" if i % 2 == 0 else "against"
-        argument = generate_argument(topic, name, stance)
-        debate_results.append((name, stance, argument))
-    return debate_results
+from backend import generate_debate
 
 # --- Custom CSS ---
 def load_css(background_image_path=None):
