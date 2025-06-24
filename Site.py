@@ -3,7 +3,7 @@ import base64
 import os
 from backend import generate_debate
 
-# --- Custom CSS ---
+# CSS
 def load_css(background_image_path=None):
     main_background_color = "#1A1A32"
     background_css = ""
@@ -46,7 +46,7 @@ def load_css(background_image_path=None):
         </style>
     """, unsafe_allow_html=True)
 
-# --- Load Background ---
+#Background
 BACKGROUND_IMAGE_PATH = "final bg.png"
 load_css(BACKGROUND_IMAGE_PATH)
 
