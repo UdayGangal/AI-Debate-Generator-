@@ -1,6 +1,6 @@
 import cohere
 
-co = cohere.Client("1YacVfW8ggBW2aLK7nS64JLc0CUchc6Da4TW0Qy4")  
+co = cohere.Client("YOUR_API_KEY")  
 
 def generate_argument(topic, participant_name, stance):
     prompt = f"""You are participating in a formal debate.
